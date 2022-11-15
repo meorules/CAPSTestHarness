@@ -1,6 +1,7 @@
 #pragma once
 #include <string>
 #include <random>
+#include "UnorderedMap.h"
 
 using namespace std;
 
@@ -20,6 +21,7 @@ private:
   string randomString;
   int topicCounter;
   int messageCounter;
+
 
 };
 

@@ -15,10 +15,13 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="TestHarness.cpp">
+    <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="TCPClient.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TestHarness.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -33,6 +36,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="RequestGenerator.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TestHarness.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UnorderedMap.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="DataStructureAPI.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

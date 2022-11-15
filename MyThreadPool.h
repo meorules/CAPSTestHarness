@@ -39,7 +39,7 @@ private:
 
 };
 
-inline ThreadPool::ThreadPool(string serverIP, int numberOfThreads) : serverIP(serverIP),numberOfThreads(numberOfThreads) {
+inline ThreadPool::ThreadPool(std::string serverIP, int numberOfThreads) : serverIP(serverIP),numberOfThreads(numberOfThreads) {
   threads.resize(numberOfThreads);
   for (int i = 0; i < numberOfThreads; i++) {
     threads.at(i) = std::thread(&ThreadPool::ThreadLoop);
@@ -47,10 +47,6 @@ inline ThreadPool::ThreadPool(string serverIP, int numberOfThreads) : serverIP(s
 }
 
 inline void ThreadPool::ThreadLoop() {
-
-  TCPClient client(serverIP, DEFAULT_PORT);
-
-  client.OpenConnection();
 
   std::function<void()> job;
 
