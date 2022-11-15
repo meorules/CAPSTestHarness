@@ -7,12 +7,16 @@
 #include <functional>
 #include <stdexcept>
 #include <future>
+#include "TCPClient.h"
+
+#define DEFAULT_PORT 12345
+
 
 class ThreadPool
 {
 public: 
   
-  ThreadPool(int numberOfThreads= std::thread::hardware_concurrency());
+  ThreadPool(std::string serverIP,int numberOfThreads= std::thread::hardware_concurrency());
   ~ThreadPool(){}
   auto QueueJob(std::function<void()> job);
 
@@ -31,13 +35,11 @@ private:
   std::condition_variable cvJobQueue;
   std::queue<std::function<void()>> jobQueue;
   std::vector<std::thread> threads;
+  std::string serverIP;
 
 };
 
-inline ThreadPool::ThreadPool(int numberOfThreads) {
-
-  
-  this-> numberOfThreads = numberOfThreads;
+inline ThreadPool::ThreadPool(string serverIP, int numberOfThreads) : serverIP(serverIP),numberOfThreads(numberOfThreads) {
   threads.resize(numberOfThreads);
   for (int i = 0; i < numberOfThreads; i++) {
     threads.at(i) = std::thread(&ThreadPool::ThreadLoop);
@@ -45,6 +47,11 @@ inline ThreadPool::ThreadPool(int numberOfThreads) {
 }
 
 inline void ThreadPool::ThreadLoop() {
+
+  TCPClient client(serverIP, DEFAULT_PORT);
+
+  client.OpenConnection();
+
   std::function<void()> job;
 
   {std::unique_lock <std::mutex> lock(queue_mutex);

@@ -2,7 +2,6 @@
 #include <future>
 #include "MyThreadPool.h"
 #include "barrier.hpp"
-#include "TCPClient.h"
 #include <chrono>
 
 
@@ -57,7 +56,7 @@ int main(int argc, char** argv)
 	bool Throttled = argv[5];
 
 	//Creating the Threads of n + m threads
-	ThreadPool* threadPool = new ThreadPool(totalNumberOfThreads);
+	ThreadPool* threadPool = new ThreadPool(serverIP,totalNumberOfThreads);
 	//vector<thread> threads;
 	vector <future<vector<int>>> futureThreadReturns;
 
