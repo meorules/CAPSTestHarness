@@ -11,7 +11,8 @@ public:
 
   RequestGenerator();
   ~RequestGenerator();
-  string generateReadRequest();
+  string generateRandomReadRequest();
+  string generateReadRequest(DataStructureAPI* structure);
   string generatePostRequest();
 
 private:
@@ -36,7 +37,7 @@ inline RequestGenerator::~RequestGenerator() {
 }
 
 
-inline string RequestGenerator::generateReadRequest(){
+inline string RequestGenerator::generateRandomReadRequest(){
   string readRequest;
   readRequest.append(read + "@");
   if (messageCounter == 5)
@@ -44,6 +45,23 @@ inline string RequestGenerator::generateReadRequest(){
   messageCounter = (messageCounter + 1) % 5;
   readRequest.append(topicCounter + "#" + messageCounter);
   return readRequest;
+
+}
+
+inline string RequestGenerator::generateReadRequest(DataStructureAPI* structure) {
+  
+  //Look through the structure and find a possible read
+  string topic = structure->findReadTopic();
+  if (topic != "") {
+    string readRequest;
+    readRequest.append(read + "@");
+    string messageID = to_string(structure->findReadMessage(topic));
+    readRequest.append(topic + "#" + messageID);
+    return readRequest;
+  }
+  else {
+    return generateRandomReadRequest();
+  }
 
 }
 

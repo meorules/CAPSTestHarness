@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClInclude Include="barrier.hpp" />
     <ClInclude Include="DataStructureAPI.h" />
+    <ClInclude Include="mathAverages.h" />
     <ClInclude Include="RequestGenerator.h" />
     <ClInclude Include="TCPClient.h" />
     <ClInclude Include="MyThreadPool.h" />

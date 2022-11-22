@@ -12,6 +12,8 @@ public:
 
   int PostFunction(string topic, string message);
   void PostFunction(string topic, string message, int id);
+  string findReadTopic();
+  int findReadMessage(string topic);
 
   string ListFunction();
   int CountFunction(string topic);
@@ -22,15 +24,18 @@ public:
 private:
   unordered_map<string, string[]>* dataStructure;
   bool structNotEmpty();
+  vector<string>* keyList;
 
 };
 
 inline UnorderedMap::UnorderedMap() {
   dataStructure = new unordered_map<string, string[]>;
+  keyList = new vector<string>;
 
 }
 inline UnorderedMap::~UnorderedMap() {
   delete dataStructure;
+  delete keyList;
 }
 
 
@@ -57,7 +62,7 @@ inline void UnorderedMap::PostFunction(string topic, string message, int id)
       std::unique_lock<std::shared_mutex> mutex(lock);
       topicArray = new string[50];
       topicArray[id] = message;
-
+      keyList->push_back(topic);
       dataStructure->emplace( topic, topicArray );
     }
   }
@@ -65,6 +70,7 @@ inline void UnorderedMap::PostFunction(string topic, string message, int id)
     std::unique_lock<std::shared_mutex> mutex(lock);
     topicArray = new string[50];
     topicArray[id] = message;
+    keyList->push_back(topic);
 
     dataStructure->emplace(topic, topicArray);
 
@@ -113,6 +119,28 @@ inline void UnorderedMap::PostFunction(string topic, string message, int id)
 //  return messageCount;
 //
 //}
+
+string UnorderedMap::findReadTopic() {
+  string toReturn = "";
+  if (keyList->size() != 0) {
+    int randomPlace = rand() % keyList->size();
+    return keyList->at(randomPlace);
+  }
+  else {
+    return toReturn;
+  }
+}
+
+int UnorderedMap::findReadMessage(string topic) {
+  int toReturn= 0 ;
+  int size = dataStructure->at(topic)->size();
+  if (size != 0) {
+    return rand() % size;
+  }
+  else {
+
+  }
+}
 
 
 /**

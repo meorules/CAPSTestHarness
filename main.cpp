@@ -8,12 +8,7 @@
 using namespace std;
 
 /*TODO
-*Create the Random Request Generator
-* Reader thread and Writer Thread
-* Create a global timer to time 10 seconds and then send a stop signal to all threads
-* Use a barrier when creating all threads to ensure the 10 seconds starts when the threads are all connected to the clients
-* Use a timer in each thread to find their own averages of sending requests
-* Use a math class to find all the various averages and print them out to the screen 
+*FIX IT
 */
 
 
@@ -41,32 +36,12 @@ int main(int argc, char** argv)
 	int totalNumberOfThreads = numberOfPostThreads + numberOfReadThreads;
 	int seconds = atoi(argv[4]);
 	bool Throttled = argv[5];
+	bool check = true;
 
-	TestHarness* testHarness = new TestHarness(serverIP, numberOfPostThreads, numberOfReadThreads, seconds, Throttled);
+	TestHarness* testHarness = new TestHarness(serverIP, numberOfPostThreads, numberOfReadThreads, seconds, Throttled,check);
 	testHarness->runTests();
 	mathAverages* mathAverage = testHarness->calculateAverages();
 	std::cout << mathAverage;
-
-	/*TCPClient client(serverIP, DEFAULT_PORT);
-	std::string request;
-
-	client.OpenConnection();
-
-	do {
-		request = "";
-		std::cout << "Enter string to send to server or \"exit\" (without quotes to terminate): ";
-		std::getline(std::cin, request);
-
-		std::cout << "String sent: " << request << std::endl;
-		std::cout << "Bytes sent: " << request.size() << std::endl;
-
-		std::string reply = client.send(request);
-
-		std::cout << "String returned: " << reply << std::endl;
-		std::cout << "Bytes received: " << reply.size() << std::endl;
-	} while (request != "exit" && request != "EXIT");
-
-	client.CloseConnection();*/
 
 	return 0;
 }
