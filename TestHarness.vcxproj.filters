@@ -24,6 +24,9 @@
     <ClCompile Include="TestHarness.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="UnorderedMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TCPClient.h">

@@ -131,6 +131,7 @@
     <ClCompile Include="TCPClient.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="TestHarness.cpp" />
+    <ClCompile Include="UnorderedMap.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="barrier.hpp" />

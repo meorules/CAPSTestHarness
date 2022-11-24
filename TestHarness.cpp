@@ -30,7 +30,7 @@ void TestHarness::runTests() {
 	}
 
 	for (int i = 0; i < numberOfReadThreads; i++) {
-		threads.emplace_back(myTest, this);
+		threads.emplace_back(myTest, this,true);
 		//futureReadThreadReturns.emplace_back(std::move(result));
 	}
 

@@ -10,9 +10,6 @@ class DataStructureAPI
 public: 
   DataStructureAPI();
   ~DataStructureAPI();
-
-  DataStructureAPI* initialiseStructure(bool custom=false);
-
   /**
  * @param Topic is the topic for which the post needs to take place, topics are created if they dont exist.
  * message is the message added the topic specified.
@@ -24,14 +21,14 @@ public:
   /**
  * @return a string containing the topics list seperated by @ and #
  */
-  virtual string ListFunction();
+  virtual string ListFunction()=0;
 
   /**
  * @param Takes a topic to check
  * @return an int value corresponding to the number of messages for the topic provided,
  * returns 0 if topic does not exist
  */
-  virtual int CountFunction(string topic);
+  virtual int CountFunction(string topic)=0;
 
   /**
  * @param Topic corresponding to the post, the messageID for the int id where the message is saved
@@ -45,7 +42,6 @@ public:
   virtual string findReadTopic()=0;
   virtual int findReadMessage(string topic)=0;
 
-  string truncateString(string toTruncate);
 
 
 private:
@@ -63,22 +59,4 @@ inline DataStructureAPI::~DataStructureAPI()
 {
 }
 
-//inline DataStructureAPI* DataStructureAPI::initialiseStructure(bool custom=false) {
-//  if (custom) {
-//    return NULL;//Some new custom dataStructure, will be implemented
-//  }
-//  else {
-//    return new UnorderedMap();
-//  }
-//}
 
-
-/**
- * @param the string to be truncated, will truncate strings if they exceed 140 characters
- * @return the truncated string
- */
-string DataStructureAPI::truncateString(string toTruncate) {
-  if (toTruncate.length() > 140)
-    toTruncate.resize(140);
-  return toTruncate;
-}
