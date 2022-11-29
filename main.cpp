@@ -36,12 +36,12 @@ int main(int argc, char** argv)
 	int totalNumberOfThreads = numberOfPostThreads + numberOfReadThreads;
 	int seconds = atoi(argv[4]);
 	bool Throttled = argv[5];
-	bool check = true;
+	//bool check = false;
 
-	TestHarness* testHarness = new TestHarness(serverIP, numberOfPostThreads, numberOfReadThreads, seconds, Throttled,check);
+	TestHarness* testHarness = new TestHarness(serverIP, numberOfPostThreads, numberOfReadThreads, seconds, Throttled);
 	testHarness->runTests();
 	mathAverages* mathAverage = testHarness->calculateAverages();
-	std::cout << mathAverage;
+	std::cout << *mathAverage;
 
 	return 0;
 }

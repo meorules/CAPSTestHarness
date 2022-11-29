@@ -43,7 +43,8 @@ inline string RequestGenerator::generateRandomReadRequest(){
   if (messageCounter == 5)
     topicCounter++;
   messageCounter = (messageCounter + 1) % 5;
-  readRequest.append(topicCounter + "#" + messageCounter);
+  string toAppend = to_string(topicCounter) + "#" + to_string(messageCounter);
+  readRequest.append(toAppend);
   return readRequest;
 
 }
@@ -56,7 +57,8 @@ inline string RequestGenerator::generateReadRequest(DataStructureAPI* structure)
     string readRequest;
     readRequest.append(read + "@");
     string messageID = to_string(structure->findReadMessage(topic));
-    readRequest.append(topic + "#" + messageID);
+    string toAppend = topic + "#" + messageID;
+    readRequest.append(toAppend);
     return readRequest;
   }
   else {
@@ -71,7 +73,9 @@ inline string RequestGenerator::generatePostRequest() {
   if (messageCounter == 5)
     topicCounter++;
   messageCounter = (messageCounter + 1) % 5;
-  postRequest.append(topicCounter + "#" + messageCounter);
+  string toAppend = to_string(topicCounter) + "#" + to_string(messageCounter);
+  postRequest.append(toAppend);
+  //postRequest.append(topicCounter + "#" + messageCounter);
   return postRequest;
 }
 

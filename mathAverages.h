@@ -33,14 +33,14 @@ private:
 };
 
 inline mathAverages::mathAverages(int noOfPostThreads, int noOfReadThreads, int noOfPostRequests, int noOfReadRequests, float time, int noOfCorrectWriteRequests, int noOfCorrectReadRequests) : noOfPostThreads(noOfPostThreads), noOfReadThreads(noOfReadThreads), noOfPostRequests(noOfPostRequests), noOfReadRequests(noOfReadRequests), noOfCorrectWriteRequests(noOfCorrectWriteRequests), noOfCorrectReadRequests(noOfCorrectReadRequests), time(time) {
-	float percentageOfCorrectWriteRequests = noOfCorrectWriteRequests / noOfPostRequests;
-	float percentageOfCorrectReadRequests = noOfCorrectReadRequests / noOfReadRequests;
-	float percentageOfCorrectRequests = (noOfCorrectReadRequests + noOfCorrectWriteRequests) / (noOfPostRequests + noOfReadRequests);
-	float noOfPostRequestsPerSecond = noOfPostRequests / time;
-	float noOfReadRequestsPerSecond = noOfReadRequests / time;
-	float noOfPostRequestsPerThreadPerSecond = noOfPostRequestsPerSecond / noOfPostThreads;
-	float noOfReadRequestsPerThreadPerSecond = noOfReadRequestsPerSecond / noOfReadThreads;
-	float noOfRequestsPerThreadPerSecond = (noOfPostRequests + noOfReadRequests) / (noOfPostThreads + noOfReadThreads) / time;
+	percentageOfCorrectWriteRequests = noOfCorrectWriteRequests / noOfPostRequests;
+	percentageOfCorrectReadRequests = noOfCorrectReadRequests / noOfReadRequests;
+	percentageOfCorrectRequests = (noOfCorrectReadRequests + noOfCorrectWriteRequests) / (noOfPostRequests + noOfReadRequests);
+	noOfPostRequestsPerSecond = noOfPostRequests / time;
+	noOfReadRequestsPerSecond = noOfReadRequests / time;
+	noOfPostRequestsPerThreadPerSecond = noOfPostRequestsPerSecond / noOfPostThreads;
+	noOfReadRequestsPerThreadPerSecond = noOfReadRequestsPerSecond / noOfReadThreads;
+	noOfRequestsPerThreadPerSecond = (noOfPostRequests + noOfReadRequests) / (noOfPostThreads + noOfReadThreads) / time;
 }
 
 inline mathAverages::~mathAverages() {
@@ -66,7 +66,7 @@ inline ostream& operator<<(ostream& os, const mathAverages& mA)
 	os << "Number of Read Requests Per Second: " << mA.noOfReadRequestsPerSecond << "\n";
 	os << "Number of Post Requests Per Second Per Thread: " << mA.noOfPostRequestsPerThreadPerSecond << "\n";
 	os << "Number of Read Requests Per Second Per Thread: " << mA.noOfReadRequestsPerThreadPerSecond << "\n";
-	os << "Number of Requests Per Second Per Thread" << mA.noOfRequestsPerThreadPerSecond << "\n";
+	os << "Number of Requests Per Second Per Thread: " << mA.noOfRequestsPerThreadPerSecond << "\n";
 
 	return os;
 }

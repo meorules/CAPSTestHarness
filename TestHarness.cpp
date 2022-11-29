@@ -1,37 +1,41 @@
 #include "TestHarness.h"
 
 
-TestHarness::TestHarness(char* serverIP, int numberOfPostThreads, int numberOfReadThreads, int seconds, bool Throttled, bool check) : serverIP(serverIP), numberOfPostThreads(numberOfPostThreads), numberOfReadThreads(numberOfReadThreads), totalNumberOfThreads(numberOfPostThreads + numberOfReadThreads), seconds(seconds), Throttled(Throttled), check(check),finishTime(0) {
-	//threadPool = new ThreadPool(serverIP, totalNumberOfThreads);
+//TestHarness::TestHarness(char* serverIP, int numberOfPostThreads, int numberOfReadThreads, int seconds, bool Throttled, bool check) : serverIP(serverIP), numberOfPostThreads(numberOfPostThreads), numberOfReadThreads(numberOfReadThreads), totalNumberOfThreads(numberOfPostThreads + numberOfReadThreads), seconds(seconds), Throttled(Throttled), check(check),finishTime(0) {
+//	//threadPool = new ThreadPool(serverIP, totalNumberOfThreads);
+//	simpleBarrier = new barrier(totalNumberOfThreads);
+//	timeUp = false;
+//	dataStructure = new UnorderedMap();
+//
+//}
+
+TestHarness::TestHarness(char* serverIP, int numberOfPostThreads, int numberOfReadThreads, int seconds, bool Throttled) : serverIP(serverIP), numberOfPostThreads(numberOfPostThreads), numberOfReadThreads(numberOfReadThreads), totalNumberOfThreads(numberOfPostThreads + numberOfReadThreads), seconds(seconds), Throttled(Throttled), finishTime(0) {
 	simpleBarrier = new barrier(totalNumberOfThreads);
 	timeUp = false;
 	dataStructure = new UnorderedMap();
-
 }
 
 TestHarness::~TestHarness() {
 	delete simpleBarrier;
 }
 
-void myTest(TestHarness* obj, bool read = true)
+vector<int> myTest(TestHarness* obj, bool read = true)
 {
 	if (read)
-		obj->readThread();
+		return obj->readThread();
 	else
-		obj->postThread();
+		return obj->postThread();
 
 }
 
 void TestHarness::runTests() {
-	std::vector<std::thread> threads;
+	//std::vector<std::thread> threads;
 	for (int i = 0; i < numberOfPostThreads; i++) {
-		threads.emplace_back(myTest,this,false);
-		//futurePostThreadReturns.emplace_back(std::move(result));
+		futurePostThreadReturns.push_back(async(myTest, this, false));
 	}
 
 	for (int i = 0; i < numberOfReadThreads; i++) {
-		threads.emplace_back(myTest, this,true);
-		//futureReadThreadReturns.emplace_back(std::move(result));
+		futureReadThreadReturns.push_back(async(myTest, this,true));
 	}
 
 	while (simpleBarrier->getm_count() != simpleBarrier->getm_count_reset_value()) {
@@ -43,9 +47,22 @@ void TestHarness::runTests() {
 		//do nothing, just to pause execution until the timer runs out essentially
 	}
 	timeUp = true;
+	/*for (int i = 0; i < threads.size(); i++) {
+		threads.at(i).join();
+	}*/
 	//threadPool->Stop();
 
+
+	for (int i = 0; i < numberOfPostThreads; i++) {
+		postThreadReturns.push_back(futurePostThreadReturns.at(i).get());
+	}
+
+	for (int i = 0; i < numberOfReadThreads; i++) {
+		readThreadReturns.push_back(futureReadThreadReturns.at(i).get());
+	}
+
 	finishTime = chrono::steady_clock::now() - startTime;
+
 
 }
 
@@ -59,18 +76,34 @@ mathAverages* TestHarness::calculateAverages() {
 
 	std::chrono::duration<float> time;
 	time = finishTime;
-	for (int i = 0; i < futureReadThreadReturns.size(); i++) {
-		noOfCorrectReadRequests += futureReadThreadReturns.at(i).get().at(futureReadThreadReturns.at(i).get().size() - 1);
-		for (int j = 0; i < futureReadThreadReturns.at(i).get().size() - 2; j++) {
-			noOfReadRequests += futureReadThreadReturns.at(i).get().at(j);
+
+	
+	for (int i = 0; i < readThreadReturns.size(); i++) {
+#ifdef CHECK
+		noOfCorrectReadRequests += readThreadReturns.at(i).at(readThreadReturns.at(i).size() - 1);
+		for (int j = 0; j < readThreadReturns.at(i).size() - 1; j++) {
+			noOfReadRequests += readThreadReturns.at(i).at(j);
 		}
-	}
-	for (int i = 0; i < futurePostThreadReturns.size(); i++) {
-		noOfCorrectWriteRequests += futurePostThreadReturns.at(i).get().at(futurePostThreadReturns.at(i).get().size() - 1);
-		for (int j = 0; i < futurePostThreadReturns.at(i).get().size() - 2; j++) {
-			noOfPostRequests += futurePostThreadReturns.at(i).get().at(j);
+#else 
+		for (int j = 0; j < readThreadReturns.at(i).size(); j++) {
+			noOfReadRequests += readThreadReturns.at(i).at(j);
 		}
+#endif
 	}
+	
+	for (int i = 0; i < postThreadReturns.size(); i++) {
+#ifdef CHECK
+			noOfCorrectWriteRequests += postThreadReturns.at(i).at(postThreadReturns.at(i).size() - 1);
+			for (int j = 0; j < postThreadReturns.at(i).size()-1; j++) {
+				noOfPostRequests += postThreadReturns.at(i).at(j);
+			}
+#else
+		for (int j = 0; j < postThreadReturns.at(i).size(); j++) {
+			noOfPostRequests += postThreadReturns.at(i).at(j);
+		}
+#endif
+	}
+
 	averageMath = new mathAverages(numberOfPostThreads, numberOfReadThreads, noOfPostRequests, noOfReadRequests, time.count(), noOfCorrectWriteRequests, noOfCorrectReadRequests);
 	return averageMath;
 }
@@ -99,12 +132,13 @@ vector<int> TestHarness::postThread() {
 		currentNoOfRequests++;
 
 		//Checking if the response is right
-		if (check) {
+#ifdef CHECK
 			bool requestCheck = checkPostRequest(request, reply);
 			noOfCorrectRequests++;
-		}
+#endif
 
-		if (chrono::steady_clock::now() - startTime >= chrono::seconds(1)) {
+		if (chrono::steady_clock::now() - startTime >= chrono::seconds(1) || timeUp) {
+			startTime = chrono::steady_clock::now();
 			noOfRequests.push_back(currentNoOfRequests);
 			currentNoOfRequests = 0;
 		}
@@ -113,6 +147,8 @@ vector<int> TestHarness::postThread() {
 
 
 	simpleBarrier->count_down_and_wait();
+
+	client.send("exit");
 
 	client.CloseConnection();
 
@@ -143,12 +179,13 @@ vector<int> TestHarness::readThread() {
 		currentNoOfRequests++;
 
 		//Checking if the response is right
-		if (check) {
+#ifdef CHECK
 			bool requestCheck = checkReadRequest(request, reply);
 			noOfCorrectRequests++;
-		}
+#endif
 
-		if (chrono::steady_clock::now() - startTime >= chrono::seconds(1)) {
+		if (chrono::steady_clock::now() - startTime >= chrono::seconds(1) || timeUp) {
+			startTime = chrono::steady_clock::now();
 			noOfRequests.push_back(currentNoOfRequests);
 			currentNoOfRequests = 0;
 		}
@@ -157,6 +194,8 @@ vector<int> TestHarness::readThread() {
 
 	simpleBarrier->count_down_and_wait();
 
+	client.send("exit");
+
 	client.CloseConnection();
 
 	return noOfRequests;
@@ -164,16 +203,16 @@ vector<int> TestHarness::readThread() {
 
 inline void TestHarness::storePostRequest(string postRequest, int id) {
 	if (!postRequest.empty()) {
-		string postTopic = postRequest.substr(5, postRequest.find("#"));
-		string postMessage = postRequest.substr(postRequest.find("#"));
+		string postTopic = postRequest.substr(postRequest.find("@") + 1, postRequest.find("#") - postRequest.find("@") - 1);
+		string postMessage = postRequest.substr(postRequest.find("#") + 1);
 		dataStructure->PostFunction(postTopic, postMessage, id);
 	}
 }
 
 inline bool TestHarness::checkPostRequest(string postRequest, string reply) {
 	if (!postRequest.empty()) {
-		string postTopic = postRequest.substr(5, postRequest.find("#"));
-		string postMessage = postRequest.substr(postRequest.find("#"));
+		string postTopic = postRequest.substr(postRequest.find("@") + 1, postRequest.find("#") - postRequest.find("@") - 1);
+		string postMessage = postRequest.substr(postRequest.find("#") + 1);
 		string message = dataStructure->ReadFunction(postTopic, stoi(reply));
 		if (postMessage == message) {
 			return true;
@@ -186,8 +225,8 @@ inline bool TestHarness::checkPostRequest(string postRequest, string reply) {
 
 inline bool TestHarness::checkReadRequest(string readRequest, string reply) {
 	if (!readRequest.empty()) {
-		string postTopic = readRequest.substr(5, readRequest.find("#"));
-		string postID = readRequest.substr(readRequest.find("#"));
+		string postTopic = readRequest.substr(readRequest.find("@")+1, readRequest.find("#") - readRequest.find("@")-1);
+		string postID = readRequest.substr(readRequest.find("#")+1);
 		string message = dataStructure->ReadFunction(postTopic, stoi(postID));
 		if (reply == message) {
 			return true;
