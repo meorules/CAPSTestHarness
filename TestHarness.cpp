@@ -148,7 +148,7 @@ vector<int> TestHarness::postThread() {
 
 	simpleBarrier->count_down_and_wait();
 
-	client.send("exit");
+	client.send("EXIT");
 
 	client.CloseConnection();
 
