@@ -7,10 +7,6 @@
 
 using namespace std;
 
-/*TODO
-*FIX IT
-*/
-
 
 
 
@@ -37,6 +33,12 @@ int main(int argc, char** argv)
 	int seconds = atoi(argv[4]);
 	bool Throttled = argv[5];
 	//bool check = false;
+	std::cout << "Starting Test Harness \n";
+	std::cout << numberOfPostThreads << " is the number of post threads \n";
+	std::cout << numberOfReadThreads << " is the number of read threads \n";
+	std::cout << seconds << " is the number of seconds \n";
+
+
 
 	TestHarness* testHarness = new TestHarness(serverIP, numberOfPostThreads, numberOfReadThreads, seconds, Throttled);
 	testHarness->runTests();

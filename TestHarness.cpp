@@ -53,11 +53,11 @@ void TestHarness::runTests() {
 	//threadPool->Stop();
 
 
-	for (int i = 0; i < numberOfPostThreads; i++) {
+	for (int i = 0; i < futurePostThreadReturns.size(); i++) {
 		postThreadReturns.push_back(futurePostThreadReturns.at(i).get());
 	}
 
-	for (int i = 0; i < numberOfReadThreads; i++) {
+	for (int i = 0; i < futureReadThreadReturns.size(); i++) {
 		readThreadReturns.push_back(futureReadThreadReturns.at(i).get());
 	}
 
@@ -94,7 +94,7 @@ mathAverages* TestHarness::calculateAverages() {
 	for (int i = 0; i < postThreadReturns.size(); i++) {
 #ifdef CHECK
 			noOfCorrectWriteRequests += postThreadReturns.at(i).at(postThreadReturns.at(i).size() - 1);
-			for (int j = 0; j < postThreadReturns.at(i).size()-1; j++) {
+			for (int j = 0; j < postThreadReturns.at(i).size() - 1; j++) {
 				noOfPostRequests += postThreadReturns.at(i).at(j);
 			}
 #else
