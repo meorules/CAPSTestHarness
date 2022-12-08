@@ -39,8 +39,8 @@ public:
 
   virtual bool TopicExists(string topic) = 0;
   virtual bool structNotEmpty()=0;
-  virtual string findReadTopic()=0;
-  virtual int findReadMessage(string topic)=0;
+  virtual const string findReadTopic()=0;
+  virtual const int findReadMessage(const string topic)=0;
 
 
 

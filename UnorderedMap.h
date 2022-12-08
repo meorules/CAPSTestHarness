@@ -11,8 +11,8 @@ public:
   ~UnorderedMap();
 
   void PostFunction(string topic, string message, int id);
-  string findReadTopic();
-  int findReadMessage(string topic);
+  const string findReadTopic();
+  const int findReadMessage(const string topic);
 
   string ListFunction();
   int CountFunction(string topic);

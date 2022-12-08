@@ -117,10 +117,11 @@ vector<int> TestHarness::postThread() {
 	int noOfCorrectRequests = 0;
 
 	client.OpenConnection();
+	RequestGenerator* gen = new RequestGenerator(3);
+
 
 	simpleBarrier->count_down_and_wait();
 
-	RequestGenerator* gen = new RequestGenerator();
 	std::string request;
 	std::string reply;
 	auto startTime = chrono::steady_clock::now();
@@ -148,7 +149,7 @@ vector<int> TestHarness::postThread() {
 
 	simpleBarrier->count_down_and_wait();
 
-	client.send("EXIT");
+	client.send("exit");
 
 	client.CloseConnection();
 
@@ -163,7 +164,7 @@ vector<int> TestHarness::readThread() {
 	int noOfCorrectRequests = 0;
 	std::string request;
 	std::string reply;
-	RequestGenerator* gen = new RequestGenerator();
+	RequestGenerator* gen = new RequestGenerator(3);
 	int currentNoOfRequests = 0;
 
 	client.OpenConnection();
@@ -173,8 +174,8 @@ vector<int> TestHarness::readThread() {
 	auto startTime = chrono::steady_clock::now();
 	//send Post Requests
 	while (!timeUp) {
-		//request = gen->generateRandomReadRequest();
-		request = gen->generateReadRequest(dataStructure);
+		request = gen->generateRandomReadRequest();
+		//request = gen->generateReadRequest(dataStructure);
 		reply = client.send(request);
 		currentNoOfRequests++;
 

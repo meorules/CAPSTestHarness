@@ -91,7 +91,7 @@ int UnorderedMap::CountFunction(string topic)
 
 }
 
-string UnorderedMap::findReadTopic() {
+const string UnorderedMap::findReadTopic() {
   string toReturn = "";
   if (keyList->size() != 0) {
     int randomPlace = rand() % keyList->size();
@@ -102,7 +102,7 @@ string UnorderedMap::findReadTopic() {
   }
 }
 
-int UnorderedMap::findReadMessage(string topic) {
+const int UnorderedMap::findReadMessage(const string topic) {
   int toReturn = 0;
   int size = dataStructure->at(topic)->size();
   if (size != 0) {

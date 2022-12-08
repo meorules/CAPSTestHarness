@@ -9,7 +9,7 @@ class RequestGenerator
 {
 public:
 
-  RequestGenerator();
+  RequestGenerator(int randomStringLength= ((rand() % 140) - 20));
   ~RequestGenerator();
   string generateRandomReadRequest();
   string generateReadRequest(DataStructureAPI* structure);
@@ -17,8 +17,9 @@ public:
 
 private:
   string generateRandomString(int size);
-  string read = "READ";
-  string post = "POST";
+  const string read = "READ@";
+  const string post = "POST@";
+  unsigned int randomStringLength;
   string randomString;
   int topicCounter;
   int messageCounter;
@@ -27,9 +28,8 @@ private:
 };
 
 
-inline RequestGenerator::RequestGenerator() :topicCounter(0),messageCounter(0) {
-  int randomNUmber = rand() % 140 - 20;
-  randomString = generateRandomString(randomNUmber);
+inline RequestGenerator::RequestGenerator(int randomStringLength) :topicCounter(0),messageCounter(0) {
+  randomString = generateRandomString(randomStringLength);
 }
 
 inline RequestGenerator::~RequestGenerator() {
@@ -38,12 +38,11 @@ inline RequestGenerator::~RequestGenerator() {
 
 
 inline string RequestGenerator::generateRandomReadRequest(){
-  string readRequest;
-  readRequest.append(read + "@");
+  string readRequest= read;
   if (messageCounter == 5)
     topicCounter++;
   messageCounter = (messageCounter + 1) % 5;
-  string toAppend = to_string(topicCounter) + "#" + to_string(messageCounter);
+  string toAppend = randomString + to_string(topicCounter) + "#" +  to_string(messageCounter);
   readRequest.append(toAppend);
   return readRequest;
 
@@ -54,8 +53,7 @@ inline string RequestGenerator::generateReadRequest(DataStructureAPI* structure)
   //Look through the structure and find a possible read
   string topic = structure->findReadTopic();
   if (topic != "") {
-    string readRequest;
-    readRequest.append(read + "@");
+    string readRequest = read;
     string messageID = to_string(structure->findReadMessage(topic));
     string toAppend = topic + "#" + messageID;
     readRequest.append(toAppend);
@@ -68,14 +66,12 @@ inline string RequestGenerator::generateReadRequest(DataStructureAPI* structure)
 }
 
 inline string RequestGenerator::generatePostRequest() {
-  string postRequest;
-  postRequest.append(post + "@");
+  string postRequest = post;
   if (messageCounter == 5)
     topicCounter++;
   messageCounter = (messageCounter + 1) % 5;
-  string toAppend = to_string(topicCounter) + "#" + to_string(messageCounter);
+  string toAppend = randomString + to_string(topicCounter) + "#" + randomString + to_string(messageCounter);
   postRequest.append(toAppend);
-  //postRequest.append(topicCounter + "#" + messageCounter);
   return postRequest;
 }
 
