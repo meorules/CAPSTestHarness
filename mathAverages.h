@@ -30,12 +30,13 @@ private:
 	float noOfReadRequestsPerThreadPerSecond;
 	float noOfRequestsPerThreadPerSecond;
 
+
 };
 
 inline mathAverages::mathAverages(int noOfPostThreads, int noOfReadThreads, int noOfPostRequests, int noOfReadRequests, float time, int noOfCorrectWriteRequests, int noOfCorrectReadRequests) : noOfPostThreads(noOfPostThreads), noOfReadThreads(noOfReadThreads), noOfPostRequests(noOfPostRequests), noOfReadRequests(noOfReadRequests), noOfCorrectWriteRequests(noOfCorrectWriteRequests), noOfCorrectReadRequests(noOfCorrectReadRequests), time(time) {
-	percentageOfCorrectWriteRequests = noOfCorrectWriteRequests / noOfPostRequests;
-	percentageOfCorrectReadRequests = noOfCorrectReadRequests / noOfReadRequests;
-	percentageOfCorrectRequests = (noOfCorrectReadRequests + noOfCorrectWriteRequests) / (noOfPostRequests + noOfReadRequests);
+	percentageOfCorrectWriteRequests = noOfCorrectWriteRequests / (float)noOfPostRequests * 100;
+	percentageOfCorrectReadRequests = noOfCorrectReadRequests / (float)noOfReadRequests * 100;
+	percentageOfCorrectRequests = (noOfCorrectReadRequests + noOfCorrectWriteRequests) / (float)(noOfPostRequests + noOfReadRequests) * 100;
 	noOfPostRequestsPerSecond = noOfPostRequests / time;
 	noOfReadRequestsPerSecond = noOfReadRequests / time;
 	noOfPostRequestsPerThreadPerSecond = noOfPostRequestsPerSecond / noOfPostThreads;
