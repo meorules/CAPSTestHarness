@@ -174,8 +174,8 @@ vector<int> TestHarness::readThread() {
 	auto startTime = chrono::steady_clock::now();
 	//send Post Requests
 	while (!timeUp) {
-		//request = gen->generateRandomReadRequest();
-		request = gen->generateReadRequest(dataStructure);
+		request = gen->generateRandomReadRequest();
+		//request = gen->generateReadRequest(dataStructure);
 		reply = client.send(request);
 		currentNoOfRequests++;
 

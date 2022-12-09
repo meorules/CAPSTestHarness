@@ -10,7 +10,7 @@
 
 
 #define DEFAULT_PORT 12345
-#define CHECK
+//#define CHECK
 
 
 using namespace std;
